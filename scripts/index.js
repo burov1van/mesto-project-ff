@@ -34,4 +34,3 @@ initialCards.forEach((cardData) => {
   const cardAdd = createCard(cardData);
   cardContainer.append(cardAdd);
 });
-// Функция для создания карточки
