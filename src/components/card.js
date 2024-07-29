@@ -1,3 +1,13 @@
+function deleteCard(event) {
+  const card = event.target.closest(".card");
+  card.remove();
+}
+
+function handleLikeClick(event) {
+  const likeButton = event.target;
+  likeButton.classList.toggle("card__like-button_is-active");
+}
+
 function createCard(card, deleteCard, handleLikeClick, handleImageClick) {
   const cardTemplate = document.querySelector("#card-template").content;
   const newTemplate = cardTemplate.cloneNode(true);
@@ -19,4 +29,4 @@ function createCard(card, deleteCard, handleLikeClick, handleImageClick) {
   return newTemplate;
 }
 
-export { createCard };
+export { createCard, deleteCard, handleLikeClick };
