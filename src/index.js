@@ -1,7 +1,7 @@
-import initialCards from "./components/cards";
 import "./vendor/normalize.css";
 import "./vendor/fonts.css";
 import "./blocks/index.css";
+import initialCards from "./components/cards";
 import { openPopup, closePopup } from "./components/modal";
 import { createCard } from "./components/card";
 
