@@ -4,6 +4,7 @@ import "./blocks/index.css";
 import initialCards from "./components/cards";
 import { openPopup, closePopup } from "./components/modal";
 import { createCard, deleteCard, handleLikeClick } from "./components/card";
+import { enableValidation, clearValidation } from './components/validation';
 
 // Инициализация глобальных констант и переменных
 const cardContainer = document.querySelector(".places__list");
@@ -49,11 +50,14 @@ initialCards.forEach((cardData) => {
 editProfileButton.addEventListener('click', () => {
   nameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
+  clearValidation(formEditProfile, validationConfig); // Очищаем валидацию
   openPopup(popupEditProfile);
 });
 
 // Открытие попапа добавления новой карточки
 addProfileButton.addEventListener('click', () => {
+  formNewCard.reset();
+  clearValidation(formNewCard, validationConfig); // Очищаем валидацию
   openPopup(popupTypeNewCard);
 });
 
@@ -66,22 +70,30 @@ closeButtons.forEach(button => {
 });
 
 // Обработчик отправки формы редактирования профиля
-function handleFormEditProfileSubmit(evt) {
+formEditProfile.addEventListener('submit', (evt) => {
   evt.preventDefault();
   profileName.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
   closePopup(popupEditProfile);
-}
+});
 
 // Обработчик отправки формы добавления новой карточки
-function handleFormNewCardSubmit(evt) {
+formNewCard.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const newCard = createCard({ name: cardNameInput.value, link: cardLinkInput.value }, deleteCard, handleLikeClick, handleImageClick);
   cardContainer.prepend(newCard);
   formNewCard.reset();
   closePopup(popupTypeNewCard);
-}
+});
 
-// Прикрепляем обработчики к формам
-formEditProfile.addEventListener('submit', handleFormEditProfileSubmit);
-formNewCard.addEventListener('submit', handleFormNewCardSubmit);
+// Настройки валидации
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
+
+// Включение валидации
+enableValidation(validationConfig);

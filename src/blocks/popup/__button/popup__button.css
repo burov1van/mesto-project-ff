@@ -25,3 +25,11 @@
     line-height: 17px;
   }
 }
+
+.popup__button:disabled {
+  background-color: white;
+  color: rgba(0, 0, 0, 0.2); /* Черный цвет текста */
+  border: 1px solid rgba(0, 0, 0, 0.2); /* Черная граница */
+  cursor: not-allowed;
+  transition: background-color 0.3s ease;
+}
