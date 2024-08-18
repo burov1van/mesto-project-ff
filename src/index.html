@@ -27,7 +27,7 @@
             background-image: url('<%= require('./images/avatar.jpg') %>');
           "
         >
-          <div class="profile__overlay"></div> <!-- Новый div для затемнения -->
+          <div class="profile__overlay"></div> 
           <button class="profile__edit-avatar-button" aria-label="Редактировать аватар"></button>
         </div>
 
@@ -115,8 +115,6 @@
         </div>
       </div>
     </div>
-
-<!-- Новый попап для подтверждения удаления карточки -->
 <div class="popup popup_type_delete-card">
   <div class="popup__content">
     <button type="button" class="popup__close"></button>
@@ -125,9 +123,6 @@
   </div>
 </div>
 </div>
-
-
-<!-- Попап для обновления аватара пользователя -->
 <div class="popup popup_type_avatar">
   <div class="popup__content">
     <button type="button" class="popup__close"></button>
@@ -145,7 +140,6 @@
     </form>
   </div>
 </div>
-
     <template id="card-template">
       <li class="places__item card">
         <img class="card__image" src="" alt="" />
@@ -154,7 +148,7 @@
           <h2 class="card__title"></h2>
           <div class="card__like-container">
             <button type="button" class="card__like-button"></button>
-            <span class="card__like-count">0</span> <!-- Добавляем элемент для счетчика лайков -->
+            <span class="card__like-count">0</span>
           </div>
         </div>
       </li>

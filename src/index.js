@@ -4,7 +4,13 @@ import "./blocks/index.css";
 import { openPopup, closePopup } from "./components/modal";
 import { createCard, deleteCard, handleLikeClick } from "./components/card";
 import { enableValidation, clearValidation } from "./components/validation";
-import { getUserInfo, getInitialCards, updateProfile, addNewCard, updateAvatar } from "./components/api";
+import {
+  getUserInfo,
+  getInitialCards,
+  updateProfile,
+  addNewCard,
+  updateAvatar,
+} from "./components/api";
 
 // Инициализация глобальных констант и переменных
 const cardContainer = document.querySelector(".places__list");
@@ -19,7 +25,9 @@ const closeButtons = document.querySelectorAll(".popup__close");
 const avatarEditButton = document.querySelector(".profile__edit-avatar-button");
 const popupAvatar = document.querySelector(".popup_type_avatar");
 const formAvatar = document.querySelector(".popup_type_avatar .popup__form");
-const avatarLinkInput = document.querySelector(".popup__input_type_avatar-link");
+const avatarLinkInput = document.querySelector(
+  ".popup__input_type_avatar-link"
+);
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 

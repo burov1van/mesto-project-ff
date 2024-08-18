@@ -1,124 +1,124 @@
-import { openPopup, closePopup } from "./modal"; // Импортируем функции из файла modal.js
+import { openPopup, closePopup } from "./modal";
 
-// Функция для удаления карточки с сервера
+// Удаление карточки с сервера
 function deleteCardFromServer(cardId, cardElement) {
   const apiConfig = {
-    baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-20',
+    baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-20",
     headers: {
-      authorization: '72ad478c-52e8-4a52-86e7-e878c04e7c49',
-      'Content-Type': 'application/json'
-    }
+      authorization: "72ad478c-52e8-4a52-86e7-e878c04e7c49",
+      "Content-Type": "application/json",
+    },
   };
 
   return fetch(`${apiConfig.baseUrl}/cards/${cardId}`, {
-    method: 'DELETE',
-    headers: apiConfig.headers
+    method: "DELETE",
+    headers: apiConfig.headers,
   })
-  .then((res) => {
-    if (res.ok) {
-      cardElement.remove();  // Удаляем карточку с интерфейса, если запрос успешен
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-  })
-  .catch((err) => {
-    console.error(err);  // Обработка ошибки
-  });
+    .then((res) => {
+      if (res.ok) {
+        cardElement.remove();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
 function deleteCard(event) {
   const cardElement = event.target.closest(".card");
-  const cardId = cardElement.dataset.cardId; // Получаем ID карточки
+  const cardId = cardElement.dataset.cardId;
 
-  // Открываем попап подтверждения удаления
-  openPopup(document.querySelector('.popup_type_delete-card'));
+  openPopup(document.querySelector(".popup_type_delete-card"));
 
-  // Удаляем предыдущие обработчики события, чтобы не дублировались
-  const confirmButton = document.querySelector('.popup__confirm');
+  const confirmButton = document.querySelector(".popup__confirm");
   confirmButton.replaceWith(confirmButton.cloneNode(true));
 
-  // Новый обработчик нажатия "Да" в попапе удаления
-  document.querySelector('.popup__confirm').addEventListener('click', () => {
-    deleteCardFromServer(cardId, cardElement); // Удаляем карточку с сервера и из интерфейса
-    closePopup(document.querySelector('.popup_type_delete-card'));
+  document.querySelector(".popup__confirm").addEventListener("click", () => {
+    deleteCardFromServer(cardId, cardElement);
+    closePopup(document.querySelector(".popup_type_delete-card"));
   });
 }
 
-// Обновляем функцию обработки кликов по кнопке лайка
+// Обработка кликов по кнопке лайка
 function handleLikeClick(event) {
   const likeButton = event.target;
   const cardElement = likeButton.closest(".card");
-  const cardId = cardElement.dataset.cardId; // Получаем ID карточки
+  const cardId = cardElement.dataset.cardId;
   const likeCountElement = cardElement.querySelector(".card__like-count");
 
   if (likeButton.classList.contains("card__like-button_is-active")) {
-    // Если лайк активен, то снимаем лайк
     dislikeCardOnServer(cardId).then((updatedCard) => {
       likeButton.classList.remove("card__like-button_is-active");
-      likeCountElement.textContent = updatedCard.likes.length; // Обновляем счетчик лайков
+      likeCountElement.textContent = updatedCard.likes.length;
     });
   } else {
-    // Если лайк не активен, то ставим лайк
     likeCardOnServer(cardId).then((updatedCard) => {
       likeButton.classList.add("card__like-button_is-active");
-      likeCountElement.textContent = updatedCard.likes.length; // Обновляем счетчик лайков
+      likeCountElement.textContent = updatedCard.likes.length;
     });
   }
 }
 
-
-// Добавляем функцию для постановки лайка на сервере
+// Постановка лайка на сервере
 function likeCardOnServer(cardId) {
   const apiConfig = {
-    baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-20',
+    baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-20",
     headers: {
-      authorization: '72ad478c-52e8-4a52-86e7-e878c04e7c49',
-      'Content-Type': 'application/json'
-    }
+      authorization: "72ad478c-52e8-4a52-86e7-e878c04e7c49",
+      "Content-Type": "application/json",
+    },
   };
 
   return fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
-    method: 'PUT',
-    headers: apiConfig.headers
+    method: "PUT",
+    headers: apiConfig.headers,
   })
-  .then((res) => {
-    if (res.ok) {
-      return res.json(); // Возвращаем обновленные данные карточки
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((err) => {
-    console.error(err);  // Обработка ошибки
-  });
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
-// Добавляем функцию для снятия лайка с сервера
+// Снятие лайка с сервера
 function dislikeCardOnServer(cardId) {
   const apiConfig = {
-    baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-20',
+    baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-20",
     headers: {
-      authorization: '72ad478c-52e8-4a52-86e7-e878c04e7c49',
-      'Content-Type': 'application/json'
-    }
+      authorization: "72ad478c-52e8-4a52-86e7-e878c04e7c49",
+      "Content-Type": "application/json",
+    },
   };
 
   return fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
-    method: 'DELETE',
-    headers: apiConfig.headers
+    method: "DELETE",
+    headers: apiConfig.headers,
   })
-  .then((res) => {
-    if (res.ok) {
-      return res.json(); // Возвращаем обновленные данные карточки
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
-  .catch((err) => {
-    console.error(err);  // Обработка ошибки
-  });
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
-
-function createCard(card, deleteCard, handleLikeClick, handleImageClick, userId) {
+// Создание карточки
+function createCard(
+  card,
+  deleteCard,
+  handleLikeClick,
+  handleImageClick,
+  userId
+) {
   const cardTemplate = document.querySelector("#card-template").content;
   const newTemplate = cardTemplate.cloneNode(true);
 
@@ -134,12 +134,10 @@ function createCard(card, deleteCard, handleLikeClick, handleImageClick, userId)
   const cardTitle = newTemplate.querySelector(".card__title");
   cardTitle.textContent = card.name;
 
-  cardElement.dataset.cardId = card._id; // Сохраняем ID карточки
+  cardElement.dataset.cardId = card._id;
 
-  // Обновляем счетчик лайков
   likeCountElement.textContent = card.likes.length;
 
-  // Проверяем, лайкнул ли текущий пользователь карточку, и устанавливаем класс активности
   const likeButton = newTemplate.querySelector(".card__like-button");
   if (card.likes.some((user) => user._id === userId)) {
     likeButton.classList.add("card__like-button_is-active");
@@ -147,7 +145,6 @@ function createCard(card, deleteCard, handleLikeClick, handleImageClick, userId)
 
   likeButton.addEventListener("click", handleLikeClick);
 
-  // Показываем иконку удаления только если карточка создана текущим пользователем
   if (card.owner._id !== userId) {
     deleteButton.remove();
   } else {
@@ -156,6 +153,5 @@ function createCard(card, deleteCard, handleLikeClick, handleImageClick, userId)
 
   return newTemplate;
 }
-
 
 export { createCard, deleteCard, handleLikeClick };
