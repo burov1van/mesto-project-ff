@@ -20,12 +20,17 @@
       </header>
       <main class="content">
         <section class="profile page__section">
+          
           <div
-            class="profile__image"
-            style="
-              background-image: url('<%= require('./images/avatar.jpg') %>');
-            "
-          ></div>
+          class="profile__image"
+          style="
+            background-image: url('<%= require('./images/avatar.jpg') %>');
+          "
+        >
+          <div class="profile__overlay"></div> <!-- Новый div для затемнения -->
+          <button class="profile__edit-avatar-button" aria-label="Редактировать аватар"></button>
+        </div>
+
           <div class="profile__info">
             <h1 class="profile__title">Жак-Ив Кусто</h1>
             <button class="profile__edit-button" type="button"></button>
@@ -111,13 +116,46 @@
       </div>
     </div>
 
+<!-- Новый попап для подтверждения удаления карточки -->
+<div class="popup popup_type_delete-card">
+  <div class="popup__content">
+    <button type="button" class="popup__close"></button>
+    <h3 class="popup__title">Вы уверены?</h3>
+    <button type="button" class="button popup__button popup__confirm">Да</button>
+  </div>
+</div>
+</div>
+
+
+<!-- Попап для обновления аватара пользователя -->
+<div class="popup popup_type_avatar">
+  <div class="popup__content">
+    <button type="button" class="popup__close"></button>
+    <h3 class="popup__title">Обновить аватар</h3>
+    <form class="popup__form" name="update-avatar">
+      <input
+        type="url"
+        name="avatar-link"
+        class="popup__input popup__input_type_avatar-link"
+        placeholder="Ссылка на аватар"
+        required
+      />
+      <span class="popup__input-error avatar-link-input-error"></span>
+      <button type="submit" class="button popup__button">Сохранить</button>
+    </form>
+  </div>
+</div>
+
     <template id="card-template">
       <li class="places__item card">
         <img class="card__image" src="" alt="" />
         <button type="button" class="card__delete-button"></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <button type="button" class="card__like-button"></button>
+          <div class="card__like-container">
+            <button type="button" class="card__like-button"></button>
+            <span class="card__like-count">0</span> <!-- Добавляем элемент для счетчика лайков -->
+          </div>
         </div>
       </li>
     </template>
