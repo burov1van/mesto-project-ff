@@ -19,7 +19,7 @@ module.exports = {
     compress: true,
     port: 8080
   },
-  module: {
+  module: { 
     rules: [{
         test: /\.js$/,
         use: 'babel-loader',

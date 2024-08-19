@@ -1,30 +1,5 @@
 import { openPopup, closePopup } from "./modal";
-
-// Удаление карточки с сервера
-function deleteCardFromServer(cardId, cardElement) {
-  const apiConfig = {
-    baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-20",
-    headers: {
-      authorization: "72ad478c-52e8-4a52-86e7-e878c04e7c49",
-      "Content-Type": "application/json",
-    },
-  };
-
-  return fetch(`${apiConfig.baseUrl}/cards/${cardId}`, {
-    method: "DELETE",
-    headers: apiConfig.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        cardElement.remove();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-}
+import { deleteCardFromServer, likeCardOnServer, dislikeCardOnServer } from "./api";
 
 function deleteCard(event) {
   const cardElement = event.target.closest(".card");
@@ -33,12 +8,27 @@ function deleteCard(event) {
   openPopup(document.querySelector(".popup_type_delete-card"));
 
   const confirmButton = document.querySelector(".popup__confirm");
-  confirmButton.replaceWith(confirmButton.cloneNode(true));
 
-  document.querySelector(".popup__confirm").addEventListener("click", () => {
-    deleteCardFromServer(cardId, cardElement);
-    closePopup(document.querySelector(".popup_type_delete-card"));
-  });
+  // Удаляем предыдущий обработчик, если он был
+  confirmButton.removeEventListener("click", handleDelete);
+
+  // Добавляем новый обработчик
+  confirmButton.addEventListener("click", handleDelete);
+
+  function handleDelete() {
+    deleteCardFromServer(cardId)
+      .then(() => {
+        cardElement.remove();
+        closePopup(document.querySelector(".popup_type_delete-card"));
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        // Убираем обработчик после завершения операции
+        confirmButton.removeEventListener("click", handleDelete);
+      });
+  }
 }
 
 // Обработка кликов по кнопке лайка
@@ -48,63 +38,15 @@ function handleLikeClick(event) {
   const cardId = cardElement.dataset.cardId;
   const likeCountElement = cardElement.querySelector(".card__like-count");
 
-  if (likeButton.classList.contains("card__like-button_is-active")) {
-    dislikeCardOnServer(cardId).then((updatedCard) => {
-      likeButton.classList.remove("card__like-button_is-active");
+  // Выбираем метод в зависимости от текущего состояния лайка
+  const likeMethod = likeButton.classList.contains("card__like-button_is-active")
+    ? dislikeCardOnServer
+    : likeCardOnServer;
+
+  likeMethod(cardId)
+    .then((updatedCard) => {
+      likeButton.classList.toggle("card__like-button_is-active");
       likeCountElement.textContent = updatedCard.likes.length;
-    });
-  } else {
-    likeCardOnServer(cardId).then((updatedCard) => {
-      likeButton.classList.add("card__like-button_is-active");
-      likeCountElement.textContent = updatedCard.likes.length;
-    });
-  }
-}
-
-// Постановка лайка на сервере
-function likeCardOnServer(cardId) {
-  const apiConfig = {
-    baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-20",
-    headers: {
-      authorization: "72ad478c-52e8-4a52-86e7-e878c04e7c49",
-      "Content-Type": "application/json",
-    },
-  };
-
-  return fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
-    method: "PUT",
-    headers: apiConfig.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-}
-
-// Снятие лайка с сервера
-function dislikeCardOnServer(cardId) {
-  const apiConfig = {
-    baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-20",
-    headers: {
-      authorization: "72ad478c-52e8-4a52-86e7-e878c04e7c49",
-      "Content-Type": "application/json",
-    },
-  };
-
-  return fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
-    method: "DELETE",
-    headers: apiConfig.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
     })
     .catch((err) => {
       console.error(err);

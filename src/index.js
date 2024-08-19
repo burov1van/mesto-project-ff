@@ -203,8 +203,21 @@ const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
   submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
+  customPatterns: {
+    name: /^[a-zA-Zа-яА-ЯёЁ\s-]+$/,
+    'place-name': /^[a-zA-Zа-яА-ЯёЁ\s-]{2,30}$/,
+    description: /^[a-zA-Zа-яА-ЯёЁ\s-]+$/
+  },
+  errorMessages: {
+    name: "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы.",
+    'place-name': "Название должно быть от 2 до 30 символов.",
+    description: "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы.",
+    empty: "Вы пропустили это поле.",
+    url: "Введите корректную ссылку."
+  }
 };
 
 // Включение валидации

@@ -1,30 +1,34 @@
 const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
-const placeNameRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]{2,30}$/;
+const placeNameRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
 
 function validateInput(inputElement, settings) {
+  const { customPatterns, errorMessages } = settings;
+
   if (inputElement.value.trim().length === 0) {
-    inputElement.setCustomValidity("Вы пропустили это поле.");
-  } else if (
-    inputElement.name === "name" ||
-    inputElement.name === "place-name" ||
-    inputElement.name === "description"
-  ) {
-    if (!nameRegex.test(inputElement.value)) {
+    inputElement.setCustomValidity(
+      errorMessages.empty || "Вы пропустили это поле."
+    );
+  } else if (customPatterns && customPatterns[inputElement.name]) {
+    const pattern = customPatterns[inputElement.name];
+    if (!pattern.test(inputElement.value)) {
       inputElement.setCustomValidity(
-        inputElement.dataset.error ||
-          "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы."
+        errorMessages[inputElement.name] ||
+          "Введите корректное значение."
       );
     } else {
       inputElement.setCustomValidity("");
     }
   } else if (inputElement.validity.typeMismatch) {
-    inputElement.setCustomValidity("Введите корректную ссылку.");
+    inputElement.setCustomValidity(
+      errorMessages.url || "Введите корректную ссылку."
+    );
   } else {
     inputElement.setCustomValidity("");
   }
 
   displayError(inputElement, settings);
 }
+
 
 function displayError(inputElement, settings) {
   const errorElement = document.querySelector(
