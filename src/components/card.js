@@ -1,5 +1,9 @@
 import { openPopup, closePopup } from "./modal";
-import { deleteCardFromServer, likeCardOnServer, dislikeCardOnServer } from "./api";
+import {
+  deleteCardFromServer,
+  likeCardOnServer,
+  dislikeCardOnServer,
+} from "./api";
 
 function deleteCard(event) {
   const cardElement = event.target.closest(".card");
@@ -9,10 +13,8 @@ function deleteCard(event) {
 
   const confirmButton = document.querySelector(".popup__confirm");
 
-  // Удаляем предыдущий обработчик, если он был
   confirmButton.removeEventListener("click", handleDelete);
 
-  // Добавляем новый обработчик
   confirmButton.addEventListener("click", handleDelete);
 
   function handleDelete() {
@@ -25,7 +27,6 @@ function deleteCard(event) {
         console.error(err);
       })
       .finally(() => {
-        // Убираем обработчик после завершения операции
         confirmButton.removeEventListener("click", handleDelete);
       });
   }
@@ -39,7 +40,9 @@ function handleLikeClick(event) {
   const likeCountElement = cardElement.querySelector(".card__like-count");
 
   // Выбираем метод в зависимости от текущего состояния лайка
-  const likeMethod = likeButton.classList.contains("card__like-button_is-active")
+  const likeMethod = likeButton.classList.contains(
+    "card__like-button_is-active"
+  )
     ? dislikeCardOnServer
     : likeCardOnServer;
 

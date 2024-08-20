@@ -1,52 +1,33 @@
-const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
-const placeNameRegex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
-
 function validateInput(inputElement, settings) {
-  const { customPatterns, errorMessages } = settings;
-
-  if (inputElement.value.trim().length === 0) {
-    inputElement.setCustomValidity(
-      errorMessages.empty || "Вы пропустили это поле."
-    );
-  } else if (customPatterns && customPatterns[inputElement.name]) {
-    const pattern = customPatterns[inputElement.name];
-    if (!pattern.test(inputElement.value)) {
-      inputElement.setCustomValidity(
-        errorMessages[inputElement.name] ||
-          "Введите корректное значение."
-      );
+  inputElement.setCustomValidity("");
+  if (!inputElement.validity.valid) {
+    if (inputElement.validity.patternMismatch) {
+      inputElement.setCustomValidity(inputElement.dataset.error);
     } else {
-      inputElement.setCustomValidity("");
+      inputElement.setCustomValidity(inputElement.validationMessage);
     }
-  } else if (inputElement.validity.typeMismatch) {
-    inputElement.setCustomValidity(
-      errorMessages.url || "Введите корректную ссылку."
-    );
+    displayError(inputElement, settings);
   } else {
-    inputElement.setCustomValidity("");
+    clearError(inputElement, settings);
   }
-
-  displayError(inputElement, settings);
 }
-
 
 function displayError(inputElement, settings) {
   const errorElement = document.querySelector(
     `.${inputElement.name}-input-error`
   );
+  errorElement.textContent = inputElement.validationMessage;
+  inputElement.classList.add(settings.inputErrorClass);
+  errorElement.classList.add(settings.errorClass);
+}
 
-  if (
-    inputElement.classList.contains("input-interacted") &&
-    inputElement.validationMessage
-  ) {
-    errorElement.textContent = inputElement.validationMessage;
-    inputElement.classList.add(settings.inputErrorClass);
-    errorElement.classList.add(settings.errorClass);
-  } else {
-    errorElement.textContent = "";
-    inputElement.classList.remove(settings.inputErrorClass);
-    errorElement.classList.remove(settings.errorClass);
-  }
+function clearError(inputElement, settings) {
+  const errorElement = document.querySelector(
+    `.${inputElement.name}-input-error`
+  );
+  errorElement.textContent = "";
+  inputElement.classList.remove(settings.inputErrorClass);
+  errorElement.classList.remove(settings.errorClass);
 }
 
 function toggleSubmitButton(formElement, settings) {
@@ -97,7 +78,7 @@ function clearValidation(formElement, settings) {
   inputElements.forEach((inputElement) => {
     inputElement.setCustomValidity("");
     inputElement.classList.remove("input-interacted");
-    displayError(inputElement, settings);
+    clearError(inputElement, settings);
   });
 
   toggleSubmitButton(formElement, settings);
